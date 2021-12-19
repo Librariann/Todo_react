@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import React from "react";
-import MyComponent from "./MyComponent/MyComponent";
-
-function App() {
-  return <MyComponent nameIntro="React" />;
-=======
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GlobalStyle from './styled-components/globalstyle';
 
@@ -27,31 +20,58 @@ const Input = styled.input`
 const InputBtn = styled.input`
   width:48px;
 `;
+interface Todo {
+  id: number; 
+  text: string; 
+}
 
 function App() {
-  const [todo, setTodo] = useState('');
+  const [todo, setTodo] = useState<Todo[]>([]);
+  const [value, setValue] = useState('');
+  const [currentValue, setCurrentValue] = useState<string | null>(() =>
+      localStorage.getItem("todos")
+    );
 
+  
   const onChange = (event:React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget:{ value }
     } = event
-
-    setTodo(value);
+    setValue(value);
     console.log(value);
   }
 
   const onClick = (event:React.FormEvent<HTMLInputElement>) => {
     event.preventDefault();
-    console.log('Click!!');
+    setTodo([
+      ...todo,
+      {
+        id:todo.length+1,
+        text: value
+      }
+
+    ])
+    localStorage.setItem("todos",JSON.stringify(todo));
+
+    console.log(todo);
   }
+  useEffect(() => {
+    setTodo([
+      JSON.parse(currentValue)
+    ])
+  });
+
+
+
+
   return (
+    
     <>
       <GlobalStyle />
       <Div>
         <H1>ToDo-List</H1>
         <form>
           <Input 
-            value={todo}
             onChange={onChange}
             type='text'
           />
@@ -62,10 +82,12 @@ function App() {
             onClick={onClick}
           />
         </form>
+        {todo.map((val, idx) => {
+            return <Div>{val.text}</Div>
+        })}
       </Div>
     </>
   );
->>>>>>> adfc7bfe4d6507423fab118fa9ed117d21f600d8
 }
 
 export default App;
