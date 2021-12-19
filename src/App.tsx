@@ -1,8 +1,8 @@
 import React from "react";
-import "./App.css";
+import MyComponent from "./MyComponent/MyComponent";
 
 function App() {
-  return <div className="App">Hello React World!</div>;
+  return <MyComponent nameIntro="React" />;
 }
 
 export default App;
